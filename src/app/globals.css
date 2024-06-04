@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.flex-column{
+    flex-direction: column;
+    gap: 40px;
+}

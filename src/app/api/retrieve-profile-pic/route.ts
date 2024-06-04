@@ -48,7 +48,7 @@ const fetchTwitterProfilePic = async (username: string) => {
   }
   const smallImageUrl = response.user.avatar_url;
 
-  return smallImageUrl.replace('_normal', '_400x400');
+  return smallImageUrl.replace('_normal', '');
 };
 
 const fetchGithubProfilePic = async (username: string) => {

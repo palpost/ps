@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3000" height="3000" viewBox="0 0 3000 3000">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke: #000;
+        stroke-width: 1px;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #017b3d;
+      }
+
+      .cls-4 {
+        fill: #cd1127;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M-79,982H3095V2022H-79V982Z"/>
+  <path id="Rectangle_1_copy" data-name="Rectangle 1 copy" class="cls-2" d="M-79,2008H3095V3074H-79V2008Z"/>
+  <path class="cls-3" d="M-79-70H3095V991H-79V-70Z"/>
+  <path id="Color_Fill_1" data-name="Color Fill 1" class="cls-4" d="M0.375,161C550.917,605,1110.46,1052,1661,1496,1109.12,1944,552.25,2387,.375,2835,1.708,1943-.958,1053,0.375,161ZM965.419,1412.63"/>
+</svg>

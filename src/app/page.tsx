@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import {
   FaArrowRotateLeft,
+  FaUpload,
   FaDownload,
   FaGithub,
   FaGitlab,
@@ -15,12 +16,26 @@ import {
 export default function Home() {
   const ref = useRef<HTMLDivElement>(null);
   const [userImageUrl, setUserImageUrl] = useState<string>();
+
+  
   const [unsuportedBrowser, setUnsupportedBrowser] = useState(false);
   const [loader, setLoader] = useState(false);
   const [gazaStatusSummary, setGazaStatusSummary] = useState();
-  const [filePostfix, setFilePostfix] = useState<
-    SocialPlatform | 'user-upload'
-  >();
+  const [filePostfix, setFilePostfix] = useState<SocialPlatform | 'user-upload'>();
+  const [imageSize, setImageSize] = useState<number | null>(null);
+  const [printImage, setPrintImage] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState(null);
+  
+
+  useEffect(() => {
+    fetch('/api/update')
+    .then((res) => res.json())
+      .then((data) => {
+       setDataUpdate(data.lastUpdate)
+      }
+      );
+  }, [dataUpdate]);
+
 
   useEffect(() => {
     const isInstagramBrowser = /Instagram/i.test(navigator.userAgent);
@@ -32,24 +47,39 @@ export default function Home() {
   }, [unsuportedBrowser]);
 
   useEffect(() => {
-    fetch('/api/gaza-status')
+    fetch('/api/status')
       .then((res) => res.json())
       .then((data) => setGazaStatusSummary(data.summary));
   }, [gazaStatusSummary]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
-    const reader = new FileReader();
 
     if (file) {
+      const reader = new FileReader();
+
       reader.onload = async (event: ProgressEvent<FileReader>) => {
-        setFilePostfix('user-upload');
-        setUserImageUrl(event.target?.result as string);
+        const image = new window.Image();
+        image.onload = () => {
+          const width = image.width;
+          const height = image.height;
+          if(width<height){
+            setImageSize(width);
+          }else{
+            setImageSize(height);
+          }
+          setFilePostfix('user-upload');
+          setUserImageUrl(event.target?.result as string);
+        };
+        image.src = event.target?.result as string;
+      };
+
+      reader.onerror = (error) => {
+        console.error('Error reading file:', error);
       };
 
       reader.readAsDataURL(file);
     } else {
-      // Handle the case when no file is selected (optional)
       console.error('No file selected.');
     }
   };
@@ -75,7 +105,20 @@ export default function Home() {
           );
           return;
         }
-        setUserImageUrl(response.profilePicUrl);
+        const image = new window.Image();
+        image.onload = () => {
+          const width = image.width;
+          const height = image.height;
+          if(width<height){
+            setImageSize(width);
+          }else{
+            setImageSize(height);
+          }
+          setUserImageUrl(response.profilePicUrl);
+        };
+        image.src = response.profilePicUrl;
+
+        
       } catch (error) {
         console.error('Error fetching profile picture:', error);
       }
@@ -91,14 +134,17 @@ export default function Home() {
   };
 
   const handleDownload = async () => {
-    // TODO: Fix if possible. This is a hack to ensure that image generated is as expected. Without repeating generateImage(), at times, the image wont be generated correctly.
+    setPrintImage(true);
+    setTimeout(async ()  =>{
     await generateImage();
     await generateImage();
     await generateImage();
     const generatedImageUrl = await generateImage();
     if (generatedImageUrl) {
       download(generatedImageUrl, `profile-pic-${filePostfix}.png`);
+      setPrintImage(false);
     }
+  },500)
   };
 
   const startOver = async () => {
@@ -106,183 +152,219 @@ export default function Home() {
   };
 
   return (
-    <main className="text-center px-8 py-12 max-w-xl mx-auto flex justify-center align-center items-center min-h-screen">
-      <div>
-        {unsuportedBrowser && (
-          <div className="border p-2 rounded-lg bg-yellow-200 my-2  text-sm mb-8">
-            <p className="font-semibold">⚠️ Unsupported Browser Detected</p>
-            <p>Please open on regular browsers like Chrome or Safari.</p>
-          </div>
-        )}
-        {gazaStatusSummary && (
-          <a
-            className="rounded-lg bg-gray-200 py-1.5 px-4 text-sm text-gray-800 cursor-pointer"
-            target="_blank"
-            href="https://data.techforpalestine.org/"
-          >
-            😥 {gazaStatusSummary} →
-          </a>
-        )}
-        <h1 className="font-semibold text-3xl mt-6">Show Solidarity 🇵🇸</h1>
-        <p className="text-lg py-2">
-          Let&apos;s unite in our profile pictures to spotlight the cause. ✊
-        </p>
-        <p className="text-gray-600">
-          Watch the{' '}
-          <a
-            href="https://www.instagram.com/p/C2B1DP0LqBl/"
-            target="_blank"
-            className="underline cursor-pointer hover:text-gray-900"
-          >
-            step-by-step guide
-          </a>{' '}
-          👀
-        </p>
-        <div className="my-12">
-          <div className="flex justify-center">
-            <div
-              style={{ width: '300px', height: '300px' }}
-              className="relative"
-              ref={ref}
+    <>
+      <main className="text-center px-8 py-12 flex-column max-w-xl mx-auto flex justify-center align-center items-center min-h-screen">
+
+        
+        <div>
+          {unsuportedBrowser && (
+            <div className="border p-2 rounded-lg bg-yellow-200 my-2  text-sm mb-8">
+              <p className="font-semibold">⚠️ Unsupported Browser Detected</p>
+              <p>Please open on regular browsers like Chrome or Safari.</p>
+            </div>
+          )}
+          {gazaStatusSummary && (
+            <span
+              className="rounded-lg bg-gray-200 py-1.5 px-4 text-sm text-gray-800 cursor-pointer"
             >
-              {/* eslint-disable-next-line */}
-              <Image
-                width={100}
-                height={100}
-                alt="border"
-                id="borderImage"
-                src={'/bg.webp'}
-                style={{ position: 'absolute', width: '100%', height: '100%' }}
-                className="rounded-full"
-                unoptimized
-              />
-              {loader ? (
-                <Image
-                  id="spinner"
-                  alt="spinner-animation"
-                  src={'/spinner.svg'}
+              😥 {gazaStatusSummary}
+            </span>
+          )}
+          <h1 className="font-semibold text-3xl mt-6">Show Solidarity 🇵🇸</h1>
+          <p className="text-lg py-2">
+            Let&apos;s unite in our profile pictures to spotlight the cause. ✊
+          </p>
+        
+          <div className="my-12">
+            <div className="flex justify-center">
+              <div
+                style={{ width: '300px', height: '300px' }}
+                className="relative"
+              >
+                <img
                   width={100}
                   height={100}
-                  style={{
-                    position: 'absolute',
-                    width: '85%',
-                    height: '85%',
-                    left: '7.5%',
-                    top: '7.5%',
-                  }}
-                  className="object-cover rounded-full cursor-wait"
+                  alt="border"
+                  id="borderImage"
+                  src={'/flag.svg'}
+                  style={{ position: 'absolute', width: '100%', height: '100%' }}
+                  className="rounded-full"
+                  
                 />
-              ) : (
-                <Image
-                  id="userImage"
-                  alt="profile-image"
-                  src={userImageUrl ?? '/user.jpg'}
-                  width={100}
-                  height={100}
-                  style={{
-                    position: 'absolute',
-                    width: '85%',
-                    height: '85%',
-                    left: '7.5%',
-                    top: '7.5%',
-                  }}
-                  className="object-cover rounded-full cursor-pointer"
-                />
-              )}
+                {loader ? (
+                  <img
+                    id="spinner"
+                    alt="spinner-animation"
+                    src={'/spinner.svg'}
+                    width={100}
+                    height={100}
+                    style={{
+                      position: 'absolute',
+                      width: '85%',
+                      height: '85%',
+                      left: '7.5%',
+                      top: '7.5%',
+                    }}
+                    className="object-cover rounded-full cursor-wait"
+                  />
+                ) : (
+                  <img
+                    id="userImage"
+                    alt="profile-image"
+                    src={userImageUrl ?? '/user.jpg'}
+                    width={100}
+                    height={100}
+                    style={{
+                      position: 'absolute',
+                      width: '85%',
+                      height: '85%',
+                      left: '7.5%',
+                      top: '7.5%',
+                    }}
+                    className="object-cover rounded-full cursor-pointer"
+                  />
+                )}
+              </div>
             </div>
           </div>
+          <div>
+            {userImageUrl ? (
+              <>
+                <p className="p-2 my-6 text-sm border rounded-lg">
+                  Download the image, then use it as your new profile picture.
+                </p>
+                <button
+                  onClick={handleDownload}
+                  className="rounded-full mb-2 py-3 px-2 w-full border border-gray-900 bg-gray-900 text-white text-xl"
+                >
+                  Download Image{' '}
+                  <FaDownload className="inline mb-1 ml-2 text-md" />
+                </button>
+                <button
+                  onClick={startOver}
+                  className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
+                >
+                  Start Over{' '}
+                  <FaArrowRotateLeft className="inline mb-1 ml-2 text-md" />
+                </button>
+              </>
+            ) : (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="fileInput"
+                />
+                <button
+                  onClick={handleUploadButtonClick}
+                  className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
+                >
+                  Upload Image
+                  <FaUpload className="inline mb-1 ml-2 text-md" />
+                </button>
+                <button
+                  onClick={async () =>
+                    await handleRetrieveProfilePicture(SocialPlatform.Twitter)
+                  }
+                  className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
+                >
+                  Use <FaXTwitter className="inline mb-1" /> Profile Pic
+                </button>
+                <button
+                  onClick={async () =>
+                    await handleRetrieveProfilePicture(SocialPlatform.Github)
+                  }
+                  className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
+                >
+                  Use <FaGithub className="inline mb-1" /> Profile Pic
+                </button>
+                <button
+                  onClick={async () =>
+                    await handleRetrieveProfilePicture(SocialPlatform.Gitlab)
+                  }
+                  className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
+                >
+                  Use <FaGitlab className="inline mb-1" /> Profile Pic
+                </button>
+              </>
+            )}
+          </div>
+          <div className="pt-8">
+            <p className="p-2 my-6 text-sm border rounded-lg">
+              Note: This app runs purely on your browser end. No images nor data
+              will be saved by the app.
+            </p>
+            <p className="text-gray-600">
+              <a
+                href="https://data.techforpalestine.org/"
+                target="_blank"
+                className="underline cursor-pointer"
+              >
+                Statistics data
+              </a>
+            </p>
+            {dataUpdate&&<p className="text-gray-600">
+            last Update: {dataUpdate}
+            </p>}
+
+            
+          </div>
         </div>
-        <div>
-          {userImageUrl ? (
-            <>
-              <p className="p-2 my-6 text-sm border rounded-lg">
-                Download the image, then use it as your new profile picture.
-              </p>
-              <button
-                onClick={handleDownload}
-                className="rounded-full mb-2 py-3 px-2 w-full border border-gray-900 bg-gray-900 text-white text-xl"
-              >
-                Download Image{' '}
-                <FaDownload className="inline mb-1 ml-2 text-md" />
-              </button>
-              <button
-                onClick={startOver}
-                className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
-              >
-                Start Over{' '}
-                <FaArrowRotateLeft className="inline mb-1 ml-2 text-md" />
-              </button>
-            </>
-          ) : (
-            <>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="fileInput"
-              />
-              <button
-                onClick={handleUploadButtonClick}
-                className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
-              >
-                Upload Image
-              </button>
-              <button
-                onClick={async () =>
-                  await handleRetrieveProfilePicture(SocialPlatform.Twitter)
-                }
-                className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
-              >
-                Use <FaXTwitter className="inline mb-1" /> Profile Pic
-              </button>
-              <button
-                onClick={async () =>
-                  await handleRetrieveProfilePicture(SocialPlatform.Github)
-                }
-                className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
-              >
-                Use <FaGithub className="inline mb-1" /> Profile Pic
-              </button>
-              <button
-                onClick={async () =>
-                  await handleRetrieveProfilePicture(SocialPlatform.Gitlab)
-                }
-                className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
-              >
-                Use <FaGitlab className="inline mb-1" /> Profile Pic
-              </button>
-            </>
-          )}
-        </div>
-        <div className="pt-8">
-          <p className="p-2 my-6 text-sm border rounded-lg">
-            Note: This app runs purely on your browser end. No images nor data
-            will be saved by the app.
-          </p>
-          <p className="text-gray-600">
-            Have any feedback?{' '}
-            <a
-              href="https://www.x.com/sohafidz"
-              target="_blank"
-              className="underline cursor-pointer"
-            >
-              Let me know!
-            </a>
-          </p>
-          <p className="text-gray-600">
-            For any bugs, please report them to our{' '}
-            <a
-              href="https://github.com/TechForPalestine/palestine-pfp-maker/issues"
-              target="_blank"
-              className="underline cursor-pointer"
-            >
-              {' '}
-              GitHub repository.
-            </a>
-          </p>
-        </div>
+  
+        {userImageUrl&&imageSize&&printImage&&
+      <div
+        style={{ width: imageSize+'px', height: imageSize+'px'}}
+        className="relative"
+        ref={ref}
+      >
+        <img
+          width="100%"
+          height="100%"
+          alt="border"
+          id="borderImage"
+          src={'/flag.svg'}
+          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          className="rounded-full"
+        />
+        {loader ? (
+          <img
+            id="spinner"
+            alt="spinner-animation"
+            src={'/spinner.svg'}
+            width="100%"
+            height="100%"
+            style={{
+              position: 'absolute',
+              width: '85%',
+              height: '85%',
+              left: '7.5%',
+              top: '7.5%',
+            }}
+            className="object-cover rounded-full cursor-wait"
+          />
+        ) : (
+          <img
+            id="userImage"
+            alt="profile-image"
+            src={userImageUrl ?? '/user.jpg'}
+            width="100%"
+            height="100%"
+            style={{
+              position: 'absolute',
+              width: '85%',
+              height: '85%',
+              left: '7.5%',
+              top: '7.5%',
+            }}
+            className="object-cover rounded-full cursor-pointer"
+          />
+        )}
       </div>
-    </main>
+      }
+      </main>
+
+    </>
   );
 }
