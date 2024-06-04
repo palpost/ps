@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import firebase_app  from "../firebase/firebase";
+import firebase_app  from '../firebase/firebase';
 
-import { getDatabase, ref, child, get, set } from "firebase/database";
+import { getDatabase, ref, child, get, set } from 'firebase/database';
 
 
 

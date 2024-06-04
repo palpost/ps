@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 import abbreviate from 'number-abbreviate';
-import firebase_app  from "../firebase/firebase";
-import { getDatabase, ref, child, get } from "firebase/database";
+import firebase_app  from '../firebase/firebase';
+import { getDatabase, ref, child, get } from 'firebase/database';
 
 
 
