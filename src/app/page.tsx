@@ -25,14 +25,33 @@ export default function Home() {
   const [imageSize, setImageSize] = useState<number | null>(null);
   const [printImage, setPrintImage] = useState(false);
   const [dataUpdate, setDataUpdate] = useState(null);
+  //const [userDatas, setUserDatas] = useState(null);
 
   useEffect(() => {
-    fetch("/api/update")
-      .then((res) => res.json())
-      .then((data) => {
-        setDataUpdate(data.lastUpdate);
-      });
-  }, [dataUpdate]);
+    const fetchData = async () => {
+        try {
+            const responseUpdate = await fetch("/api/update");
+            const dataUpdate = await responseUpdate.json();
+            setDataUpdate(dataUpdate.lastUpdate);
+           
+            await new Promise(resolve => setTimeout(resolve, 4000));
+            const responseUserData = await fetch("/api/userData");
+            const dataUser = await responseUserData.json();
+            //setUserDatas(dataUser.status);
+            //console.log(dataUser)
+        } catch (error) {
+            console.error("Failed to fetch data:", error);
+        }
+    };
+    fetchData();
+    return () => {
+    };
+}, [dataUpdate]);
+
+
+
+
+
 
   useEffect(() => {
     const isInstagramBrowser = /Instagram/i.test(navigator.userAgent);
