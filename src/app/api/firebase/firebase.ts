@@ -1,5 +1,5 @@
 // import Firebase
-import { initializeApp,getApps} from "firebase/app";
+import { initializeApp} from "firebase/app";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCw3JVh02EDc7oUkmXv8BXGRF2y05SmmJg",
@@ -11,6 +11,8 @@ const firebaseConfig = {
     measurementId: "G-RBT1BWRF6F"
 };
 
-let firebase_app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+let firebase_app = initializeApp(firebaseConfig);
 
 export default firebase_app;
+
+

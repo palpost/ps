@@ -2,7 +2,6 @@
 import { SocialPlatform } from '@/types';
 import download from 'downloadjs';
 import { toPng } from 'html-to-image';
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import {
   FaArrowRotateLeft,
