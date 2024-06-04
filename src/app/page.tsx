@@ -35,8 +35,8 @@ export default function Home() {
         setDataUpdate(dataUpdate.lastUpdate);
 
         await new Promise((resolve) => setTimeout(resolve, 4000));
-        const responseUserData = await fetch('/api/userData');
-        const dataUser = await responseUserData.json();
+        await fetch('/api/userData');
+        //const dataUser = await responseUserData.json();
         //setUserDatas(dataUser.status);
         //console.log(dataUser)
       } catch (error) {
