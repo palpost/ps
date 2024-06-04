@@ -50,7 +50,7 @@ export async function GET() {
       }
     })
     .catch((error) => {
-      throw new Error("Failed to fetch data");
+      throw new Error("Failed to fetch data",error);
     });
   return dbRefs;
 }

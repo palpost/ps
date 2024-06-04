@@ -26,7 +26,7 @@ export async function GET() {
         return null;
       }
     })
-    .catch((error) => {
+    .catch(() => {
       return null;
     });
 
