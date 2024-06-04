@@ -49,8 +49,8 @@ export async function GET() {
         throw new Error("Failed to fetch data");
       }
     })
-    .catch((error) => {
-      throw new Error("Failed to fetch data",error);
+    .catch(() => {
+      throw new Error("Failed to fetch data");
     });
   return dbRefs;
 }
