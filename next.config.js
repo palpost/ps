@@ -3,16 +3,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: '*.twimg.com',
+        hostname: "*.twimg.com",
       },
       {
-        hostname: 'avatars.githubusercontent.com',
+        hostname: "avatars.githubusercontent.com",
       },
       {
-        hostname: 'secure.gravatar.com',
+        hostname: "secure.gravatar.com",
       },
       {
-        hostname: 'gitlab.com',
+        hostname: "gitlab.com",
       },
     ],
   },

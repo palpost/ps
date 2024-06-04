@@ -1,8 +1,8 @@
-'use client';
-import { SocialPlatform } from '@/types';
-import download from 'downloadjs';
-import { toPng } from 'html-to-image';
-import { useEffect, useRef, useState } from 'react';
+"use client";
+import { SocialPlatform } from "@/types";
+import download from "downloadjs";
+import { toPng } from "html-to-image";
+import { useEffect, useRef, useState } from "react";
 import {
   FaArrowRotateLeft,
   FaUpload,
@@ -10,31 +10,29 @@ import {
   FaGithub,
   FaGitlab,
   FaXTwitter,
-} from 'react-icons/fa6';
+} from "react-icons/fa6";
 
 export default function Home() {
   const ref = useRef<HTMLDivElement>(null);
   const [userImageUrl, setUserImageUrl] = useState<string>();
 
-  
   const [unsuportedBrowser, setUnsupportedBrowser] = useState(false);
   const [loader, setLoader] = useState(false);
   const [gazaStatusSummary, setGazaStatusSummary] = useState();
-  const [filePostfix, setFilePostfix] = useState<SocialPlatform | 'user-upload'>();
+  const [filePostfix, setFilePostfix] = useState<
+    SocialPlatform | "user-upload"
+  >();
   const [imageSize, setImageSize] = useState<number | null>(null);
   const [printImage, setPrintImage] = useState(false);
   const [dataUpdate, setDataUpdate] = useState(null);
-  
 
   useEffect(() => {
-    fetch('/api/update')
-    .then((res) => res.json())
+    fetch("/api/update")
+      .then((res) => res.json())
       .then((data) => {
-       setDataUpdate(data.lastUpdate)
-      }
-      );
+        setDataUpdate(data.lastUpdate);
+      });
   }, [dataUpdate]);
-
 
   useEffect(() => {
     const isInstagramBrowser = /Instagram/i.test(navigator.userAgent);
@@ -46,7 +44,7 @@ export default function Home() {
   }, [unsuportedBrowser]);
 
   useEffect(() => {
-    fetch('/api/status')
+    fetch("/api/status")
       .then((res) => res.json())
       .then((data) => setGazaStatusSummary(data.summary));
   }, [gazaStatusSummary]);
@@ -62,29 +60,29 @@ export default function Home() {
         image.onload = () => {
           const width = image.width;
           const height = image.height;
-          if(width<height){
+          if (width < height) {
             setImageSize(width);
-          }else{
+          } else {
             setImageSize(height);
           }
-          setFilePostfix('user-upload');
+          setFilePostfix("user-upload");
           setUserImageUrl(event.target?.result as string);
         };
         image.src = event.target?.result as string;
       };
 
       reader.onerror = (error) => {
-        console.error('Error reading file:', error);
+        console.error("Error reading file:", error);
       };
 
       reader.readAsDataURL(file);
     } else {
-      console.error('No file selected.');
+      console.error("No file selected.");
     }
   };
 
   const handleUploadButtonClick = () => {
-    document.getElementById('fileInput')?.click();
+    document.getElementById("fileInput")?.click();
   };
 
   const handleRetrieveProfilePicture = async (platform: SocialPlatform) => {
@@ -100,7 +98,7 @@ export default function Home() {
         setLoader(false);
         if (response === null) {
           alert(
-            'Error fetching your profile picture. Please make sure that you entered a correct username.',
+            "Error fetching your profile picture. Please make sure that you entered a correct username.",
           );
           return;
         }
@@ -108,18 +106,16 @@ export default function Home() {
         image.onload = () => {
           const width = image.width;
           const height = image.height;
-          if(width<height){
+          if (width < height) {
             setImageSize(width);
-          }else{
+          } else {
             setImageSize(height);
           }
           setUserImageUrl(response.profilePicUrl);
         };
         image.src = response.profilePicUrl;
-
-        
       } catch (error) {
-        console.error('Error fetching profile picture:', error);
+        console.error("Error fetching profile picture:", error);
       }
     }
   };
@@ -128,22 +124,22 @@ export default function Home() {
     try {
       return await toPng(ref.current as HTMLElement);
     } catch (error) {
-      console.log('Error generating image', error);
+      console.log("Error generating image", error);
     }
   };
 
   const handleDownload = async () => {
     setPrintImage(true);
-    setTimeout(async ()  =>{
-    await generateImage();
-    await generateImage();
-    await generateImage();
-    const generatedImageUrl = await generateImage();
-    if (generatedImageUrl) {
-      download(generatedImageUrl, `profile-pic-${filePostfix}.png`);
-      setPrintImage(false);
-    }
-  },500)
+    setTimeout(async () => {
+      await generateImage();
+      await generateImage();
+      await generateImage();
+      const generatedImageUrl = await generateImage();
+      if (generatedImageUrl) {
+        download(generatedImageUrl, `profile-pic-${filePostfix}.png`);
+        setPrintImage(false);
+      }
+    }, 500);
   };
 
   const startOver = async () => {
@@ -153,8 +149,6 @@ export default function Home() {
   return (
     <>
       <main className="text-center px-8 py-12 flex-column max-w-xl mx-auto flex justify-center align-center items-center min-h-screen">
-
-        
         <div>
           {unsuportedBrowser && (
             <div className="border p-2 rounded-lg bg-yellow-200 my-2  text-sm mb-8">
@@ -163,9 +157,7 @@ export default function Home() {
             </div>
           )}
           {gazaStatusSummary && (
-            <span
-              className="rounded-lg bg-gray-200 py-1.5 px-4 text-sm text-gray-800 cursor-pointer"
-            >
+            <span className="rounded-lg bg-gray-200 py-1.5 px-4 text-sm text-gray-800 cursor-pointer">
               😥 {gazaStatusSummary}
             </span>
           )}
@@ -173,11 +165,11 @@ export default function Home() {
           <p className="text-lg py-2">
             Let&apos;s unite in our profile pictures to spotlight the cause. ✊
           </p>
-        
+
           <div className="my-12">
             <div className="flex justify-center">
               <div
-                style={{ width: '300px', height: '300px' }}
+                style={{ width: "300px", height: "300px" }}
                 className="relative"
               >
                 <img
@@ -185,24 +177,27 @@ export default function Home() {
                   height={100}
                   alt="border"
                   id="borderImage"
-                  src={'/flag.svg'}
-                  style={{ position: 'absolute', width: '100%', height: '100%' }}
+                  src={"/flag.svg"}
+                  style={{
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                  }}
                   className="rounded-full"
-                  
                 />
                 {loader ? (
                   <img
                     id="spinner"
                     alt="spinner-animation"
-                    src={'/spinner.svg'}
+                    src={"/spinner.svg"}
                     width={100}
                     height={100}
                     style={{
-                      position: 'absolute',
-                      width: '85%',
-                      height: '85%',
-                      left: '7.5%',
-                      top: '7.5%',
+                      position: "absolute",
+                      width: "85%",
+                      height: "85%",
+                      left: "7.5%",
+                      top: "7.5%",
                     }}
                     className="object-cover rounded-full cursor-wait"
                   />
@@ -210,15 +205,15 @@ export default function Home() {
                   <img
                     id="userImage"
                     alt="profile-image"
-                    src={userImageUrl ?? '/user.jpg'}
+                    src={userImageUrl ?? "/user.jpg"}
                     width={100}
                     height={100}
                     style={{
-                      position: 'absolute',
-                      width: '85%',
-                      height: '85%',
-                      left: '7.5%',
-                      top: '7.5%',
+                      position: "absolute",
+                      width: "85%",
+                      height: "85%",
+                      left: "7.5%",
+                      top: "7.5%",
                     }}
                     className="object-cover rounded-full cursor-pointer"
                   />
@@ -236,14 +231,14 @@ export default function Home() {
                   onClick={handleDownload}
                   className="rounded-full mb-2 py-3 px-2 w-full border border-gray-900 bg-gray-900 text-white text-xl"
                 >
-                  Download Image{' '}
+                  Download Image{" "}
                   <FaDownload className="inline mb-1 ml-2 text-md" />
                 </button>
                 <button
                   onClick={startOver}
                   className="rounded-full my-2 py-3 px-2 w-full border border-gray-900 text-xl"
                 >
-                  Start Over{' '}
+                  Start Over{" "}
                   <FaArrowRotateLeft className="inline mb-1 ml-2 text-md" />
                 </button>
               </>
@@ -304,66 +299,63 @@ export default function Home() {
                 Statistics data
               </a>
             </p>
-            {dataUpdate&&<p className="text-gray-600">
-            last Update: {dataUpdate}
-            </p>}
-
-            
+            {dataUpdate && (
+              <p className="text-gray-600">last Update: {dataUpdate}</p>
+            )}
           </div>
         </div>
-  
-        {userImageUrl&&imageSize&&printImage&&
-      <div
-        style={{ width: imageSize+'px', height: imageSize+'px'}}
-        className="relative"
-        ref={ref}
-      >
-        <img
-          width="100%"
-          height="100%"
-          alt="border"
-          id="borderImage"
-          src={'/flag.svg'}
-          style={{ position: 'absolute', width: '100%', height: '100%' }}
-          className="rounded-full"
-        />
-        {loader ? (
-          <img
-            id="spinner"
-            alt="spinner-animation"
-            src={'/spinner.svg'}
-            width="100%"
-            height="100%"
-            style={{
-              position: 'absolute',
-              width: '85%',
-              height: '85%',
-              left: '7.5%',
-              top: '7.5%',
-            }}
-            className="object-cover rounded-full cursor-wait"
-          />
-        ) : (
-          <img
-            id="userImage"
-            alt="profile-image"
-            src={userImageUrl ?? '/user.jpg'}
-            width="100%"
-            height="100%"
-            style={{
-              position: 'absolute',
-              width: '85%',
-              height: '85%',
-              left: '7.5%',
-              top: '7.5%',
-            }}
-            className="object-cover rounded-full cursor-pointer"
-          />
-        )}
-      </div>
-      }
-      </main>
 
+        {userImageUrl && imageSize && printImage && (
+          <div
+            style={{ width: imageSize + "px", height: imageSize + "px" }}
+            className="relative"
+            ref={ref}
+          >
+            <img
+              width="100%"
+              height="100%"
+              alt="border"
+              id="borderImage"
+              src={"/flag.svg"}
+              style={{ position: "absolute", width: "100%", height: "100%" }}
+              className="rounded-full"
+            />
+            {loader ? (
+              <img
+                id="spinner"
+                alt="spinner-animation"
+                src={"/spinner.svg"}
+                width="100%"
+                height="100%"
+                style={{
+                  position: "absolute",
+                  width: "85%",
+                  height: "85%",
+                  left: "7.5%",
+                  top: "7.5%",
+                }}
+                className="object-cover rounded-full cursor-wait"
+              />
+            ) : (
+              <img
+                id="userImage"
+                alt="profile-image"
+                src={userImageUrl ?? "/user.jpg"}
+                width="100%"
+                height="100%"
+                style={{
+                  position: "absolute",
+                  width: "85%",
+                  height: "85%",
+                  left: "7.5%",
+                  top: "7.5%",
+                }}
+                className="object-cover rounded-full cursor-pointer"
+              />
+            )}
+          </div>
+        )}
+      </main>
     </>
   );
 }
