@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import firebase_app from "../../../../lib/firebase/firebase";
-import { getDatabase, ref, child, get, set } from "firebase/database";
+import { getDatabase, ref, get, set } from "firebase/database";
 
 export const runtime = "edge";
 
