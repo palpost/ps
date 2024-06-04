@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
-import firebase_app from "../../../../lib/firebase/firebase";
-import { getDatabase, ref, get, set } from "firebase/database";
+import { NextResponse } from 'next/server';
+import firebase_app from '../../../../lib/firebase/firebase';
+import { getDatabase, ref, get, set } from 'firebase/database';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 
 export async function GET() {
   const database = getDatabase(firebase_app);
-  const dbRef = ref(database, "users");
+  const dbRef = ref(database, 'users');
 
   const userData = await getDataUser();
 
@@ -23,25 +23,27 @@ export async function GET() {
     });
 
   if (userData) {
-    const updatedData = Array.isArray(oldData) ? [...oldData, userData] : [userData];
+    const updatedData = Array.isArray(oldData)
+      ? [...oldData, userData]
+      : [userData];
     await set(dbRef, updatedData);
     return NextResponse.json({
-      status: true,
+      status: true
     });
   } else {
     return NextResponse.json({
-      status: false,
+      status: false
     });
   }
 }
 
 async function getDataUser() {
   const res = await fetch(
-    "https://ipgeolocation.abstractapi.com/v1/?api_key=afc510081d1743259f780ff97bdd2b93",
-    { next: { revalidate: 10, } }
+    'https://ipgeolocation.abstractapi.com/v1/?api_key=afc510081d1743259f780ff97bdd2b93',
+    { next: { revalidate: 10 } }
   );
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    throw new Error('Failed to fetch data');
   }
   return await res.json();
 }

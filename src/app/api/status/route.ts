@@ -1,10 +1,10 @@
-import dayjs from "dayjs";
-import { NextResponse } from "next/server";
-import abbreviate from "number-abbreviate";
-import firebase_app from "../../../../lib/firebase/firebase";
-import { getDatabase, ref, child, get } from "firebase/database";
+import dayjs from 'dayjs';
+import { NextResponse } from 'next/server';
+import abbreviate from 'number-abbreviate';
+import firebase_app from '../../../../lib/firebase/firebase';
+import { getDatabase, ref, child, get } from 'firebase/database';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 /*
 export async function GET() {
   const res = await fetch(
@@ -35,22 +35,22 @@ export async function GET() {
       if (snapshot.exists()) {
         const { killed, lastDailyUpdate } = snapshot.val();
         const daysOfWarCrimes = dayjs(lastDailyUpdate).diff(
-          "2023-10-07",
-          "day",
+          '2023-10-07',
+          'day'
         );
 
         return NextResponse.json(
           {
-            summary: `${abbreviate(killed.total)} killed in ${daysOfWarCrimes} days`,
+            summary: `${abbreviate(killed.total)} killed in ${daysOfWarCrimes} days`
           },
-          { status: 200 },
+          { status: 200 }
         );
       } else {
-        throw new Error("Failed to fetch data");
+        throw new Error('Failed to fetch data');
       }
     })
     .catch(() => {
-      throw new Error("Failed to fetch data");
+      throw new Error('Failed to fetch data');
     });
   return dbRefs;
 }

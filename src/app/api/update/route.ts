@@ -1,19 +1,19 @@
-import { NextResponse } from "next/server";
-import firebase_app from "../../../../lib/firebase/firebase";
+import { NextResponse } from 'next/server';
+import firebase_app from '../../../../lib/firebase/firebase';
 
-import { getDatabase, ref, child, get, set } from "firebase/database";
+import { getDatabase, ref, child, get, set } from 'firebase/database';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 
 export async function GET() {
   const database = getDatabase(firebase_app);
 
   const res = await fetch(
-    "https://data.techforpalestine.org/api/v2/summary.json",
-    { next: { revalidate: 3600 } },
+    'https://data.techforpalestine.org/api/v2/summary.json',
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    throw new Error('Failed to fetch data');
   }
   const newData = await res.json();
 
@@ -33,15 +33,15 @@ export async function GET() {
   if (oldData && newData && newData.lastDailyUpdate) {
     if (newData.lastDailyUpdate != oldData.lastDailyUpdate) {
       const db = database;
-      set(ref(db, "status"), newData);
+      set(ref(db, 'status'), newData);
       return NextResponse.json({
-        status: "update data",
-        lastUpdate: oldData.newData,
+        status: 'update data',
+        lastUpdate: oldData.newData
       });
     }
   }
   return NextResponse.json({
-    status: "no change",
-    lastUpdate: oldData.lastDailyUpdate,
+    status: 'no change',
+    lastUpdate: oldData.lastDailyUpdate
   });
 }

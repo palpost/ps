@@ -1,13 +1,13 @@
-import { SocialPlatform } from "@/types";
-import { NextResponse, type NextRequest } from "next/server";
+import { SocialPlatform } from '@/types';
+import { NextResponse, type NextRequest } from 'next/server';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const username = searchParams.get("username");
-  const platform = searchParams.get("platform") as SocialPlatform;
+  const username = searchParams.get('username');
+  const platform = searchParams.get('platform') as SocialPlatform;
 
-  let profilePicUrl = "/user.jpg";
+  let profilePicUrl = '/user.jpg';
 
   if (
     !username ||
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 const fetchTwitterProfilePic = async (username: string) => {
   const endpoint = `https://api.fxtwitter.com/${username}`;
   const response = await fetch(endpoint).then((res) =>
-    res.ok ? res.json() : null,
+    res.ok ? res.json() : null
   );
 
   if (response === null) {
@@ -48,13 +48,13 @@ const fetchTwitterProfilePic = async (username: string) => {
   }
   const smallImageUrl = response.user.avatar_url;
 
-  return smallImageUrl.replace("_normal", "");
+  return smallImageUrl.replace('_normal', '');
 };
 
 const fetchGithubProfilePic = async (username: string) => {
   const endpoint = `https://api.github.com/users/${username}`;
   const response = await fetch(endpoint).then((res) =>
-    res.ok ? res.json() : null,
+    res.ok ? res.json() : null
   );
 
   if (response === null) {
@@ -66,7 +66,7 @@ const fetchGithubProfilePic = async (username: string) => {
 const fetchGitlabProfilePic = async (username: string) => {
   const endpoint = `https://gitlab.com/api/v4/users?username=${username}`;
   const response = await fetch(endpoint).then((res) =>
-    res.ok ? res.json() : null,
+    res.ok ? res.json() : null
   );
 
   if (response === null) {
