@@ -24,9 +24,7 @@ export async function GET() {
 
   if (userData) {
     const updatedData = Array.isArray(oldData) ? [...oldData, userData] : [userData];
-
     await set(dbRef, updatedData);
-
     return NextResponse.json({
       status: true,
     });
@@ -45,6 +43,5 @@ async function getDataUser() {
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-  
   return await res.json();
 }
