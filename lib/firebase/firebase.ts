@@ -8,7 +8,7 @@ const firebaseConfig = {
   storageBucket: 'palestine-2f5c9.appspot.com',
   messagingSenderId: '424929570831',
   appId: '1:424929570831:web:b3c63f40f9063af955b37a',
-  measurementId: 'G-RBT1BWRF6F',
+  measurementId: 'G-RBT1BWRF6F'
 };
 
 const firebase_app = initializeApp(firebaseConfig);
