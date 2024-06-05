@@ -51,7 +51,9 @@ const Home: React.FC = () => {
       {showData ? (
         <div className={styles.table}>
           <UserTable users={users} />
-          <button onClick={fetchUsers} className={styles.fetchButton}>تحديث</button>
+          <button onClick={fetchUsers} className={styles.fetchButton}>
+            تحديث
+          </button>
         </div>
       ) : (
         <div className={styles.container}>

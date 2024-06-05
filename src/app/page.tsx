@@ -1,9 +1,10 @@
 'use client';
 import { SocialPlatform } from '@/types';
 import download from 'downloadjs';
-import { toPng } from 'html-to-image';
+import { toJpeg, toPng } from 'html-to-image';
 import { setData } from './api/dataUseing/data';
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import {
   FaArrowRotateLeft,
   FaUpload,
@@ -33,6 +34,7 @@ export default function Home() {
   const [dataUpdate, setDataUpdate] = useState(null);
   const [userDatas, setUserDatas] = useState(false);
   const [userID, setUserID] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState('png');
 
   const shareTitle = 'Show Solidarity';
   const shareUrl = 'https://swp.pmix.net/';
@@ -60,6 +62,10 @@ export default function Home() {
   const shareOnWhatsapp = () => {
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareTitle)}%20${encodeURIComponent(shareUrl)}`;
     window.open(whatsappUrl, '_blank');
+  };
+
+  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedType(event.target.value);
   };
 
   useEffect(() => {
@@ -189,8 +195,16 @@ export default function Home() {
 
   const generateImage = async () => {
     setUserDatas(true);
+    const node = ref.current as HTMLElement;
+    const options = {
+      backgroundColor: 'white'
+    };
+
     try {
-      return await toPng(ref.current as HTMLElement);
+      if (selectedType == 'png') return await toPng(ref.current as HTMLElement);
+      else {
+        return await toJpeg(node, options);
+      }
     } catch (error) {
       console.log('Error generating image', error);
     }
@@ -295,6 +309,29 @@ export default function Home() {
                 <p className="p-2 my-6 text-sm border rounded-lg">
                   Download the image, then use it as your new profile picture.
                 </p>
+                <div style={{ marginBottom: 5 + 'px' }}>
+                  <label style={{ marginRight: 15 + 'px' }}>
+                    <input
+                      style={{ marginRight: 10 + 'px' }}
+                      type="radio"
+                      value="png"
+                      checked={selectedType === 'png'}
+                      onChange={handleTypeChange}
+                    />
+                    PNG
+                  </label>
+                  <label style={{ marginLeft: 15 + 'px' }}>
+                    <input
+                      style={{ marginRight: 10 + 'px' }}
+                      type="radio"
+                      value="jpeg"
+                      checked={selectedType === 'jpeg'}
+                      onChange={handleTypeChange}
+                    />
+                    JPEG
+                  </label>
+                </div>
+
                 <button
                   onClick={handleDownload}
                   className="rounded-full mb-2 py-3 px-2 w-full border border-gray-900 bg-gray-900 text-white text-xl"
@@ -410,22 +447,23 @@ export default function Home() {
             className="relative"
             ref={ref}
           >
-            <img
-              width="100%"
-              height="100%"
+            <Image
+              width={100}
+              height={100}
               alt="border"
               id="borderImage"
               src={'/flag.svg'}
               style={{ position: 'absolute', width: '100%', height: '100%' }}
               className="rounded-full"
+              unoptimized
             />
             {loader ? (
-              <img
+              <Image
                 id="spinner"
                 alt="spinner-animation"
                 src={'/spinner.svg'}
-                width="100%"
-                height="100%"
+                width={100}
+                height={100}
                 style={{
                   position: 'absolute',
                   width: '85%',
@@ -436,12 +474,12 @@ export default function Home() {
                 className="object-cover rounded-full cursor-wait"
               />
             ) : (
-              <img
+              <Image
                 id="userImage"
                 alt="profile-image"
                 src={userImageUrl ?? '/user.jpg'}
-                width="100%"
-                height="100%"
+                width={100}
+                height={100}
                 style={{
                   position: 'absolute',
                   width: '85%',
