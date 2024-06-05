@@ -5,17 +5,22 @@ import { getDatabase, ref, get, set } from 'firebase/database';
  * Function to set user data with geolocation and timestamp in Firebase database.
  * @param {string} userID - The ID of the user.
  * @param {string} userImageUrl - The ID of the user.
- * 
+ *
  */
-export async function setData(userID: string|null,userImageUrl:string|null) {
+export async function setData(
+  userID: string | null,
+  userImageUrl: string | null
+) {
   try {
     // Fetch geolocation data
-    const userData = await fetch('https://ipgeolocation.abstractapi.com/v1/?api_key=afc510081d1743259f780ff97bdd2b93')
+    const userData = await fetch(
+      'https://ipgeolocation.abstractapi.com/v1/?api_key=afc510081d1743259f780ff97bdd2b93'
+    )
       .then((res) => res.json())
       .then((data) => {
-        data["user"] = userID;
-        data["userImg"] = userImageUrl;
-        data["dateSet"] = new Date().toISOString();;
+        data['user'] = userID;
+        data['userImg'] = userImageUrl;
+        data['dateSet'] = new Date().toISOString();
         return data;
       });
 
@@ -43,6 +48,6 @@ export async function setData(userID: string|null,userImageUrl:string|null) {
       await set(dbRef, updatedData);
     }
   } catch (error) {
-    console.error("Error setting user data:", error);
+    console.error('Error setting user data:', error);
   }
 }

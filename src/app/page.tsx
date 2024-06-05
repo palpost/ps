@@ -29,15 +29,14 @@ export default function Home() {
   const [userDatas, setUserDatas] = useState(false);
   const [userID, setUserID] = useState<string | null>(null);
 
-
   useEffect(() => {
     const fetchDataUser = async () => {
       try {
-        if(userDatas){
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        await setData(userID,userImageUrl);
-        setUserDatas(false);
-      }
+        if (userDatas) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await setData(userID, userImageUrl);
+          setUserDatas(false);
+        }
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
@@ -45,7 +44,6 @@ export default function Home() {
     fetchDataUser();
     return () => {};
   }, [userDatas]);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +53,7 @@ export default function Home() {
         setDataUpdate(dataUpdate.lastUpdate);
 
         await new Promise((resolve) => setTimeout(resolve, 4000));
-       
+
         //await fetch('/api/userData');
         //const dataUser = await responseUserData.json();
         //setUserDatas(dataUser.status);
@@ -135,8 +133,8 @@ export default function Home() {
             'Error fetching your profile picture. Please make sure that you entered a correct username.'
           );
           return;
-        }else{
-          setUserID(userProvidedUsername)
+        } else {
+          setUserID(userProvidedUsername);
         }
         const image = new window.Image();
         image.onload = () => {
