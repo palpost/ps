@@ -1,0 +1,70 @@
+.table{
+  direction: rtl;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup label {
+  margin-bottom: 5px;
+}
+
+.submitButton {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.fetchButton {
+  margin-top: 20px;
+  background-color: #28a745;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
+.table {
+  width: 80%; 
+  margin: auto;
+}
+
+.table-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+}
+
+.tableContainer {
+  display: flex;
+  justify-content: center;
+}

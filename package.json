@@ -12,6 +12,9 @@
     "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.19",
     "browser-image-compression": "^2.0.2",
     "child_process": "^1.0.2",
     "dayjs": "^1.11.10",

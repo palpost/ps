@@ -10,7 +10,12 @@ import {
   FaDownload,
   FaGithub,
   FaGitlab,
-  FaXTwitter
+  FaXTwitter,
+  FaTwitter,
+  FaFacebook,
+  FaLinkedin,
+  FaPinterest,
+  FaWhatsapp
 } from 'react-icons/fa6';
 
 export default function Home() {
@@ -28,6 +33,34 @@ export default function Home() {
   const [dataUpdate, setDataUpdate] = useState(null);
   const [userDatas, setUserDatas] = useState(false);
   const [userID, setUserID] = useState<string | null>(null);
+
+  const shareTitle = 'Show Solidarity';
+  const shareUrl = 'https://swp.pmix.net/';
+
+  const shareOnTwitter = () => {
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTitle)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(twitterUrl, '_blank');
+  };
+
+  const shareOnFacebook = () => {
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    window.open(facebookUrl, '_blank');
+  };
+
+  const shareOnLinkedin = () => {
+    const linkedinUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}`;
+    window.open(linkedinUrl, '_blank');
+  };
+
+  const shareOnPinterest = () => {
+    const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&media=${encodeURIComponent(shareUrl)}&description=${encodeURIComponent(shareTitle)}`;
+    window.open(pinterestUrl, '_blank');
+  };
+
+  const shareOnWhatsapp = () => {
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareTitle)}%20${encodeURIComponent(shareUrl)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   useEffect(() => {
     const fetchDataUser = async () => {
@@ -326,17 +359,48 @@ export default function Home() {
               will be saved by the app.
             </p>
             <p className="text-gray-600">
+              from{' '}
               <a
                 href="https://data.techforpalestine.org/"
                 target="_blank"
                 className="underline cursor-pointer"
               >
-                Statistics data
+                Palestine Datasets
               </a>
             </p>
             {dataUpdate && (
               <p className="text-gray-600">last Update: {dataUpdate}</p>
             )}
+
+            <p className="text-gray-600 mt-3 mb-2">
+              Tell your friends about solidarity
+            </p>
+            <div
+              style={{
+                fontSize: 25 + 'px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10 + 'px',
+                color: '#515151',
+                justifyContent: 'center'
+              }}
+            >
+              <button onClick={shareOnTwitter}>
+                <FaTwitter size={24} />
+              </button>
+              <button onClick={shareOnFacebook}>
+                <FaFacebook size={24} />
+              </button>
+              <button onClick={shareOnLinkedin}>
+                <FaLinkedin size={24} />
+              </button>
+              <button onClick={shareOnPinterest}>
+                <FaPinterest size={24} />
+              </button>
+              <button onClick={shareOnWhatsapp}>
+                <FaWhatsapp size={24} />
+              </button>
+            </div>
           </div>
         </div>
 
