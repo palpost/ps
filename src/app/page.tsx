@@ -34,7 +34,7 @@ export default function Home() {
   const [dataUpdate, setDataUpdate] = useState(null);
   const [userDatas, setUserDatas] = useState(false);
   const [userID, setUserID] = useState<string | null>(null);
-  const [selectedType, setSelectedType] = useState('png');
+  const [selectedType, setSelectedType] = useState('jpeg');
 
   const shareTitle = 'Show Solidarity';
   const shareUrl = 'https://swp.pmix.net/';
