@@ -2,6 +2,7 @@
 import { SocialPlatform } from '@/types';
 import download from 'downloadjs';
 import { toPng } from 'html-to-image';
+import { setData } from './api/dataUseing/data';
 import { useEffect, useRef, useState } from 'react';
 import {
   FaArrowRotateLeft,
@@ -14,7 +15,7 @@ import {
 
 export default function Home() {
   const ref = useRef<HTMLDivElement>(null);
-  const [userImageUrl, setUserImageUrl] = useState<string>();
+  const [userImageUrl, setUserImageUrl] = useState<string | null>(null);
 
   const [unsuportedBrowser, setUnsupportedBrowser] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -25,7 +26,26 @@ export default function Home() {
   const [imageSize, setImageSize] = useState<number | null>(null);
   const [printImage, setPrintImage] = useState(false);
   const [dataUpdate, setDataUpdate] = useState(null);
-  //const [userDatas, setUserDatas] = useState(null);
+  const [userDatas, setUserDatas] = useState(false);
+  const [userID, setUserID] = useState<string | null>(null);
+
+
+  useEffect(() => {
+    const fetchDataUser = async () => {
+      try {
+        if(userDatas){
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await setData(userID,userImageUrl);
+        setUserDatas(false);
+      }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+    fetchDataUser();
+    return () => {};
+  }, [userDatas]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +55,8 @@ export default function Home() {
         setDataUpdate(dataUpdate.lastUpdate);
 
         await new Promise((resolve) => setTimeout(resolve, 4000));
-        await fetch('/api/userData');
+       
+        //await fetch('/api/userData');
         //const dataUser = await responseUserData.json();
         //setUserDatas(dataUser.status);
         //console.log(dataUser)
@@ -114,6 +135,8 @@ export default function Home() {
             'Error fetching your profile picture. Please make sure that you entered a correct username.'
           );
           return;
+        }else{
+          setUserID(userProvidedUsername)
         }
         const image = new window.Image();
         image.onload = () => {
@@ -134,6 +157,7 @@ export default function Home() {
   };
 
   const generateImage = async () => {
+    setUserDatas(true);
     try {
       return await toPng(ref.current as HTMLElement);
     } catch (error) {
@@ -156,7 +180,7 @@ export default function Home() {
   };
 
   const startOver = async () => {
-    setUserImageUrl(undefined);
+    setUserImageUrl(null);
   };
 
   return (
