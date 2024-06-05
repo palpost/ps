@@ -36,12 +36,6 @@ const Home: React.FC = () => {
       fetchUsers();
       setShowData(true);
     }
-    console.log(
-      'Login submitted with email:',
-      userAdmin,
-      'and password:',
-      password
-    );
   };
 
   const fetchUsers = async () => {
@@ -57,6 +51,7 @@ const Home: React.FC = () => {
       {showData ? (
         <div className={styles.table}>
           <UserTable users={users} />
+          <button onClick={fetchUsers} className={styles.fetchButton}>تحديث</button>
         </div>
       ) : (
         <div className={styles.container}>
