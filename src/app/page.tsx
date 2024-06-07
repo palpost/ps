@@ -218,7 +218,10 @@ export default function Home() {
       await generateImage();
       const generatedImageUrl = await generateImage();
       if (generatedImageUrl) {
-        download(generatedImageUrl, `profile-pic-${filePostfix}.png`);
+        download(
+          generatedImageUrl,
+          `profile-pic-${filePostfix}.${selectedType}`
+        );
         setPrintImage(false);
       }
     }, 500);
