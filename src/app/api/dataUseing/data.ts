@@ -38,7 +38,7 @@ export async function setData(
           const itemRef = ref(database, `users/${itemKey}`);
           await remove(itemRef);
           result['deleted'] = true;
-          const newData: { [key: number]: any } = {};
+          const newData: { [key: number]: object } = {};
           let index = 0;
           Object.keys(data).forEach((key) => {
             if (key !== itemKey) {
