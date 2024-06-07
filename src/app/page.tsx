@@ -238,11 +238,7 @@ export default function Home() {
               <p>Please open on regular browsers like Chrome or Safari.</p>
             </div>
           )}
-          {gazaStatusSummary && (
-            <span className="rounded-lg bg-gray-200 py-1.5 px-4 text-sm text-gray-800 cursor-pointer">
-              😥 {gazaStatusSummary}
-            </span>
-          )}
+
           <h1 className="font-semibold text-3xl mt-6">Show Solidarity 🇵🇸</h1>
           <p className="text-lg py-2">
             Let&apos;s unite in our profile pictures to spotlight the cause. ✊
@@ -395,7 +391,16 @@ export default function Home() {
               Note: This app runs purely on your browser end. No images nor data
               will be saved by the app.
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-2">
+
+            {gazaStatusSummary && (
+            <span className="rounded-lg bg-gray-200 py-1.5 px-4 text-sm text-gray-800 cursor-pointer" style={{fontWeight:'bold',fontSize:17+'px'}}>
+              😥 {gazaStatusSummary}
+            </span>
+          )}
+</p>
+
+            <p className="text-gray-600" style={{fontSize:15+'px'}}>
               from{' '}
               <a
                 href="https://data.techforpalestine.org/"
@@ -406,7 +411,7 @@ export default function Home() {
               </a>
             </p>
             {dataUpdate && (
-              <p className="text-gray-600">last Update: {dataUpdate}</p>
+              <p className="text-gray-600" style={{fontSize:15+'px'}}>last Update: {dataUpdate}</p>
             )}
 
             <p className="text-gray-600 mt-3 mb-2">
