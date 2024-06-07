@@ -73,7 +73,7 @@ export default function Home() {
       try {
         if (userDatas) {
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          await setData(userID, userImageUrl);
+          await setData(userID, userImageUrl, false, null);
           setUserDatas(false);
         }
       } catch (error) {

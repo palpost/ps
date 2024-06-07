@@ -1,5 +1,5 @@
 import firebase_app from '../../../../lib/firebase/firebase';
-import { getDatabase, ref, get, set } from 'firebase/database';
+import { getDatabase, ref, get, set, remove } from 'firebase/database';
 
 /**
  * Function to set user data with geolocation and timestamp in Firebase database.
@@ -9,45 +9,66 @@ import { getDatabase, ref, get, set } from 'firebase/database';
  */
 export async function setData(
   userID: string | null,
-  userImageUrl: string | null
+  userImageUrl: string | null,
+  removed: boolean | false,
+  id: number | null
 ) {
+  const result: { [key: string]: any } = {};
+
+  const database = getDatabase(firebase_app);
+
   try {
-    // Fetch geolocation data
-    const userData = await fetch(
-      'https://ipgeolocation.abstractapi.com/v1/?api_key=afc510081d1743259f780ff97bdd2b93'
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        data['user'] = userID;
-        data['userImg'] = userImageUrl;
-        data['dateSet'] = new Date().toISOString();
-        return data;
-      });
-
-    const database = getDatabase(firebase_app);
-    const dbRef = ref(database, 'users');
-
-    // Get old data from Firebase
-    const oldData = await get(dbRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          return snapshot.val();
+    if (removed && id) {
+      result['type'] = 'remove';
+      const itemIdToDelete = id;
+      const dbRef = ref(database, 'users');
+      const snapshot = await get(dbRef);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const itemKey = Object.keys(data).find(
+          (key) => data[key].id === itemIdToDelete
+        );
+        if (itemKey) {
+          const itemRef = ref(database, `users/${itemKey}`);
+          await remove(itemRef);
+          result['deleted'] = true;
+          const newData: { [key: number]: any } = {};
+          let index = 0;
+          Object.keys(data).forEach((key) => {
+            if (key !== itemKey) {
+              newData[index++] = data[key];
+            }
+          });
+          await set(dbRef, newData);
         } else {
-          return [];
+          result['msg'] = 'لم يتم العثور على العنصر بالمعرف المحدد';
         }
-      })
-      .catch(() => {
-        return [];
-      });
+      } else {
+        result['msg'] = 'لا توجد بيانات في المسار المحدد';
+      }
+    } else {
+      result['type'] = 'add';
+      const userData = await fetch(
+        'https://ipgeolocation.abstractapi.com/v1/?api_key=afc510081d1743259f780ff97bdd2b93'
+      ).then((res) => res.json());
 
-    // Update Firebase with new data
-    if (userData) {
+      userData['id'] = Math.floor(Math.random() * 9999999999999);
+      userData['user'] = userID;
+      userData['userImg'] = userImageUrl;
+      userData['dateSet'] = new Date().toISOString();
+
+      const dbRef = ref(database, 'users');
+      const snapshot = await get(dbRef);
+      const oldData = snapshot.exists() ? snapshot.val() : [];
       const updatedData = Array.isArray(oldData)
         ? [...oldData, userData]
         : [userData];
       await set(dbRef, updatedData);
+      result['data'] = 'تم اضافة البيانات بنجاح';
     }
   } catch (error) {
-    console.error('Error setting user data:', error);
+    result['msg'] = 'Error setting user data:' + error;
   }
+
+  return result;
 }

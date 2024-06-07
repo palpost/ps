@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".lib/firebase/firebase.ts",
     "prettier.config.js"
-  ],
+, "src/app/api/twitter/route.js"  ],
   "exclude": ["node_modules"]
 }

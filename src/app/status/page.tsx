@@ -2,13 +2,15 @@
 import React, { useState } from 'react';
 import UserTable from '../../components/UserTable';
 import styles from './LoginPage.module.css';
+import { setData } from '../api/dataUseing/data';
+
 interface User {
+  id: number;
   user: string;
   userImg: string;
   city: string;
   continent: string;
   country: string;
-  country_code: string;
   flag: {
     emoji: string;
   };
@@ -32,7 +34,10 @@ const Home: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Perform login logic here, like calling an API endpoint
-    if (userAdmin == 'admin' && password == 's120120130S') {
+    if (
+      userAdmin == process.env.NEXT_PUBLIC_USER_ADMINS &&
+      password == process.env.NEXT_PUBLIC_USER_PASSWORD
+    ) {
       fetchUsers();
       setShowData(true);
     }
@@ -46,11 +51,20 @@ const Home: React.FC = () => {
     setUsers(data);
   };
 
+  const handleDelete = async (id: number) => {
+    const result = await setData(null, null, true, id);
+    if (result.type === 'remove' && result.deleted) {
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+    } else {
+      console.log(result.msg);
+    }
+  };
+
   return (
     <>
       {showData ? (
         <div className={styles.table}>
-          <UserTable users={users} />
+          <UserTable users={users} onDelete={handleDelete} />
           <button onClick={fetchUsers} className={styles.fetchButton}>
             تحديث
           </button>
