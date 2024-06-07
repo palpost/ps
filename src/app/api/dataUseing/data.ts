@@ -13,7 +13,13 @@ export async function setData(
   removed: boolean | false,
   id: number | null
 ) {
-  const result: { [key: string]: any } = {};
+  const result: {
+    data?: object;
+    type?: string;
+    deleted?: boolean;
+    msg?: string;
+    done?: boolean;
+  } = {};
 
   const database = getDatabase(firebase_app);
 
@@ -64,7 +70,7 @@ export async function setData(
         ? [...oldData, userData]
         : [userData];
       await set(dbRef, updatedData);
-      result['data'] = 'تم اضافة البيانات بنجاح';
+      result['msg'] = 'تم اضافة البيانات بنجاح';
     }
   } catch (error) {
     result['msg'] = 'Error setting user data:' + error;

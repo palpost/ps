@@ -392,15 +392,17 @@ export default function Home() {
               will be saved by the app.
             </p>
             <p className="text-gray-600 mb-2">
+              {gazaStatusSummary && (
+                <span
+                  className="rounded-lg bg-gray-200 py-1.5 px-4 text-sm text-gray-800 cursor-pointer"
+                  style={{ fontWeight: 'bold', fontSize: 17 + 'px' }}
+                >
+                  😥 {gazaStatusSummary}
+                </span>
+              )}
+            </p>
 
-            {gazaStatusSummary && (
-            <span className="rounded-lg bg-gray-200 py-1.5 px-4 text-sm text-gray-800 cursor-pointer" style={{fontWeight:'bold',fontSize:17+'px'}}>
-              😥 {gazaStatusSummary}
-            </span>
-          )}
-</p>
-
-            <p className="text-gray-600" style={{fontSize:15+'px'}}>
+            <p className="text-gray-600" style={{ fontSize: 15 + 'px' }}>
               from{' '}
               <a
                 href="https://data.techforpalestine.org/"
@@ -411,7 +413,9 @@ export default function Home() {
               </a>
             </p>
             {dataUpdate && (
-              <p className="text-gray-600" style={{fontSize:15+'px'}}>last Update: {dataUpdate}</p>
+              <p className="text-gray-600" style={{ fontSize: 15 + 'px' }}>
+                last Update: {dataUpdate}
+              </p>
             )}
 
             <p className="text-gray-600 mt-3 mb-2">
