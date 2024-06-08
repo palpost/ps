@@ -1,8 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserTable from '../../components/UserTable';
 import styles from './LoginPage.module.css';
 import { setData } from '../api/dataUseing/data';
+import Cookies from 'js-cookie';
 
 interface User {
   id: number;
@@ -23,6 +24,14 @@ const Home: React.FC = () => {
   const [userAdmin, setUserAdmin] = useState('');
   const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    const value = Cookies.get('useradmin');
+    if (value == '1') {
+      fetchUsers();
+      setShowData(true);
+    }
+  }, []);
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserAdmin(e.target.value);
   };
@@ -40,6 +49,7 @@ const Home: React.FC = () => {
     ) {
       fetchUsers();
       setShowData(true);
+      Cookies.set('useradmin', '1', { expires: 130 });
     }
   };
 
