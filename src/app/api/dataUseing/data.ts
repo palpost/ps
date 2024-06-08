@@ -54,7 +54,9 @@ export async function setData(
       }
     } else {
       result['type'] = 'add';
-      const userData = await fetch('/api/userInfo').then((res) => res.json());
+      const userData = await fetch(
+        'https://ipgeolocation.abstractapi.com/v1/?api_key=afc510081d1743259f780ff97bdd2b93'
+      ).then((res) => res.json());
 
       userData['id'] = Math.floor(Math.random() * 9999999999999);
       userData['user'] = userID;
