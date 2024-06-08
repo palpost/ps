@@ -39,7 +39,7 @@ export async function GET() {
 
 async function getDataUser() {
   const res = await fetch(
-    'https://ipgeolocation.abstractapi.com/v1/?api_key=afc510081d1743259f780ff97bdd2b93',
+    '/api/userInfo',
     { next: { revalidate: 10 } }
   );
   if (!res.ok) {
