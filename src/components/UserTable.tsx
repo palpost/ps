@@ -68,7 +68,11 @@ const UserTable: React.FC<UserTableProps> = ({ users, onDelete }) => {
                     </TableCell>
                     <TableCell align="center">
                       <a href={user.userImg} target="_blank">
-                        <Avatar alt={user.id.toString()} src={user.userImg} />
+                        <Avatar
+                          style={{ margin: 'auto' }}
+                          alt={user.id.toString()}
+                          src={user.userImg}
+                        />
                       </a>
                     </TableCell>
                     <TableCell align="center">{user.city}</TableCell>

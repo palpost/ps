@@ -10,7 +10,5 @@ export async function GET() {
     throw new Error('Failed to fetch data');
   }
   const userinfo = await res.json();
-  return NextResponse.json(userinfo,
-    { status: 200 }
-  );
+  return NextResponse.json(userinfo, { status: 200 });
 }
